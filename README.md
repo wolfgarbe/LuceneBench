@@ -59,7 +59,7 @@ Test data and search index are stored on different disks in order to utilize the
 | &nbsp;&nbsp;&nbsp;median |  57 | 3  |  |
 | &nbsp;&nbsp;&nbsp;90th percentile | 78  | 8  |  |
 | &nbsp;&nbsp;&nbsp;99th percentile | 110  | 17  |  |
-| **Maximum Throughput** (QPS)   | 68  | 1376  | **20.2** | 
+| **Maximum Throughput** (QPS)   | 68  | 1146  | **16.9** | 
 | **Maximum Concurrent Users** (latency<1s) | 4  | 600  | **150** |
 | **Indexing Speed** (million docs/day) | 1,239 | 550  | **0.44** |
 | **Indexing Speed** (GB/hour)  | 160  | 70  |  **0.44** |
