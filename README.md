@@ -52,7 +52,7 @@ Test data and search index are stored on different disks in order to utilize the
 
 ![Benchmark](https://wolfgarbe.github.io/LuceneBench/img/lucenebench2.png "Benchmark")
 
-|                           | [Lucene](http://lucene.apache.org/core/) v7.5   | [SeekStorm](https://seekstorm.com/) v0.1   | Factor |
+|                           | [Lucene](http://lucene.apache.org/core/) v7.5   | [SeekStorm](https://seekstorm.com/) v0.2   | Factor |
 | :--- | ---: | ---: | ---: |    
 | **Search Latency** (ms, 4 concurrent users)   | 59  |  3 |  **19.7** | 
 | &nbsp;&nbsp;&nbsp;mean |  59 | 3  |  |
