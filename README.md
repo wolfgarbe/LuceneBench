@@ -52,17 +52,17 @@ Test data and search index are stored on different disks in order to utilize the
 
 ![Benchmark](https://wolfgarbe.github.io/LuceneBench/img/lucenebench2.png "Benchmark")
 
-|                           | [Lucene](http://lucene.apache.org/core/) v7.5   | [SeekStorm](https://seekstorm.com/) v0.2   | Factor |
+|                           | [Lucene](http://lucene.apache.org/core/) v8.4.1   | [SeekStorm](https://seekstorm.com/) v0.2   | Factor |
 | :--- | ---: | ---: | ---: |    
-| **Search Latency** (ms, 4 concurrent users)   | 59  |  3 |  **19.7** | 
-| &nbsp;&nbsp;&nbsp;mean |  59 | 3  |  |
-| &nbsp;&nbsp;&nbsp;median |  57 | 3  |  |
-| &nbsp;&nbsp;&nbsp;90th percentile | 78  | 8  |  |
+| **Search Latency** (ms, 4 concurrent users)   | 63  |  3 |  **19.7** | 
+| &nbsp;&nbsp;&nbsp;mean |  63 | 3  |  |
+| &nbsp;&nbsp;&nbsp;median |  61 | 3  |  |
+| &nbsp;&nbsp;&nbsp;90th percentile | 81  | 8  |  |
 | &nbsp;&nbsp;&nbsp;99th percentile | 110  | 17  |  |
-| **Maximum Throughput** (QPS)   | 68  | 1146  | **16.9** | 
+| **Maximum Throughput** (QPS)   | 63  | 1146  | **16.9** | 
 | **Maximum Concurrent Users** (latency<1s) | 4  | 600  | **150** |
-| **Indexing Speed** (million docs/day) | 1,086 | 550  | **0.51** |
-| **Indexing Speed** (GB/hour)  | 140  | 70  |  **0.51** |
+| **Indexing Speed** (million docs/day) | 900 | 550  | **0.51** |
+| **Indexing Speed** (GB/hour)  | 116  | 70  |  **0.51** |
 | **Index Size** (GB)           | 17  | 17  | **1.00** |
 | **Write Amplification**       | 6.19 | 1.28 | **4.84** |
 
