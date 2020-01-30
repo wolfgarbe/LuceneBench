@@ -61,8 +61,8 @@ Test data and search index are stored on different disks in order to utilize the
 | &nbsp;&nbsp;&nbsp;99th percentile | 110  | 17  |  |
 | **Maximum Throughput** (QPS)   | 68  | 1146  | **16.9** | 
 | **Maximum Concurrent Users** (latency<1s) | 4  | 600  | **150** |
-| **Indexing Speed** (million docs/day) | 1,239 | 550  | **0.44** |
-| **Indexing Speed** (GB/hour)  | 160  | 70  |  **0.44** |
+| **Indexing Speed** (million docs/day) | 1,086 | 550  | **0.51** |
+| **Indexing Speed** (GB/hour)  | 140  | 70  |  **0.51** |
 | **Index Size** (GB)           | 17  | 17  | **1.00** |
 | **Write Amplification**       | 6.19 | 1.28 | **4.84** |
 
@@ -83,6 +83,6 @@ Intel Core i7-8750H<br>
 Samsung 970 EVO SSD, 1TB<br>
 
 ### Software
-Lucene 7.5.0<br>
+Lucene 8.4.1<br>
 Java SE 13.0.2<br>
 Microsoft Windows 10 Professional<br>
