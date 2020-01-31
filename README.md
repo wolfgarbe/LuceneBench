@@ -42,8 +42,7 @@ Lucene Bench measures the following Key Performance Indicators (KPI):
 * Index Size
 
 ## Indexing Test data
-[English Wikipedia dump](https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2) (5,677,776 docs, 63.9 GB)<br>
-The Wikipedia dump original XML format has been exported to a plain text file (UTF-8, 17.6 GB).
+The [English Wikipedia dump](https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2) (5,677,776 docs, 63.9 GB) original XML format has been exported to a plain text file (UTF-8, 17.6 GB).
 Five consecutive lines constitute a single document: title, content, domain, url, date.
 
 ## Query Test data
