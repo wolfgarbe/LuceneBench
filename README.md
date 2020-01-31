@@ -6,7 +6,7 @@ LuceneBench<br>
 [SeekStorm](https://seekstorm.com) is a high-performance search platform written in C#, powering the SeekStorm Search as a Service.
 <br><br>
 
-> Building a search engine is easy, so there are a lot of them, and all of them are really fast. 
+> Building a search engine is easy, so there are a lot of them, and all are really fast. 
 > ... as long as you have only 1000 documents indexed, and only a single concurrent searcher.
 > The hard part is scaling: Searching an index with billions of documents, with thousand concurrent users and still returning results within milliseconds on a single machine.
 
