@@ -53,9 +53,9 @@ Test data and search index are stored on different disks in order to utilize the
 
 ## Benchmark results
 
-![Benchmark](https://wolfgarbe.github.io/LuceneBench/img/lucenebench1.png "Benchmark")
+![Benchmark](https://wolfgarbe.github.io/LuceneBench/img/search_latency.png "Benchmark")
 
-![Benchmark](https://wolfgarbe.github.io/LuceneBench/img/lucenebench2.png "Benchmark")
+![Benchmark](https://wolfgarbe.github.io/LuceneBench/img/search_throughput.png "Benchmark")
 
 |                           | [Lucene](http://lucene.apache.org/core/) v8.4.1   | [SeekStorm](https://seekstorm.com/) v0.2   | Factor |
 | :--- | ---: | ---: | ---: |    
