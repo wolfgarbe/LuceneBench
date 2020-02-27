@@ -8,7 +8,7 @@ LuceneBench<br>
 
 > Building a search engine is easy, so there are a lot of them, and all are really fast 
 > ... as long as you have only 1000 documents indexed, and only a single concurrent searcher.
-> The hard part is scaling: Searching an index with billions of documents, with thousand concurrent users and still returning results within milliseconds on a single machine.
+> The hard part is scaling: Searching thousand indices with billions of documents, with thousand concurrent users and still returning results within milliseconds on a single machine.
 
 <br><br>
 Performance for Indexing and Search is of paramount importance, but reliable numbers are hard to obtain. 
