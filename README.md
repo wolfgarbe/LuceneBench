@@ -10,7 +10,7 @@ LuceneBench<br>
 > ... as long as you have only 1000 documents indexed, and only a single concurrent searcher.
 > The hard part is scaling: Searching thousand indices with billions documents, with thousand concurrent users and still returning results within milliseconds on a single machine.
 
-<br>
+<br><br>
 Performance for Indexing and Search is of paramount importance, but reliable numbers are hard to obtain. 
 While there are many benchmark results published, they all vary depending on 
 * number of documents, 
