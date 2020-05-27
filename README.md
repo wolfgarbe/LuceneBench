@@ -45,6 +45,8 @@ Lucene Bench measures the following Key Performance Indicators (KPI):
 The [English Wikipedia dump](https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2) (5,677,776 docs, 63.9 GB) original XML format has been exported to a plain text file (UTF-8, 17.6 GB).
 Five consecutive lines constitute a single document: title, content, domain, url, date.
 
+You may use [WikipediaExport](https://github.com/wolfgarbe/WikipediaExport) to export the Wikipedia XML dumps to the plain text files required by LuceneBench.
+
 ## Query Test data
 [TREC 2009 Million Query Track](https://trec.nist.gov/data/million.query09.html) (40,000 queries)<br>
 The test queries are stored in a plain text file (UTF-8).
