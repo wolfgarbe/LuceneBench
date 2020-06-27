@@ -13,9 +13,12 @@ import java.util.concurrent.locks.ReentrantLock;
 //ImportWikipedia
 public class LuceneBenchmark 
 {
-    //true: index and search
-    //false: search only in existing index
-    public static Boolean newindex=true;
+    //true: create new index
+    //false: load existing index
+    public static Boolean indexingEnabled=false;
+    //true: load test enabled
+    //false: load test disabled
+    public static Boolean loadTestEnabled=true;
 
     public static int querySize = 40000;
 
@@ -33,8 +36,8 @@ public class LuceneBenchmark
     public static  AtomicLong resultCountSum =new AtomicLong();
     //public static  AtomicLong sumSearchTime =new AtomicLong();
     public static  ReentrantLock lock = new ReentrantLock();
-
-    public static Sampling sampleSearchTime;// = new Sampling(10000);
+ 
+    public static Sampling sampleSearchTime;
 
     public static void LoadQueries(String filename)
     {
@@ -47,10 +50,9 @@ public class LuceneBenchmark
             lines.forEach(query -> 
             {                
                 if (query != "")
-                {
-                  
+                {              
                     String[] parts = query.split(":");
-                    queries.add(parts[2]);          
+                    queries.add(parts[2]);     
                 }                     
             });
         } catch (IOException ex) {}
@@ -60,16 +62,18 @@ public class LuceneBenchmark
 
     public static void main(String[] args)  throws InterruptedException, RejectedExecutionException 
     {
-        System.out.println("Indexing started ...");
+        System.out.println(System.getProperty("java.version") );
 
         long start=0L;
         long millis=0L;
         
         // Open the directory 
-        lucene.openIndex("D:/data/luceneindex", newindex);
+        lucene.openIndex("D:/data/luceneindex", indexingEnabled);
         
-        if (newindex)
+        if (indexingEnabled)
         {
+            System.out.println("Indexing started ...");
+
             String pathString="C:/data/wikipedia/enwiki-latest-pages-articles.txt";
             Path path = Paths.get(pathString);
             File f = new File(pathString);
@@ -145,69 +149,63 @@ public class LuceneBenchmark
             (millis/(long)60000));
         }
 
-        //--------------------------
-
-        
-        //testonly
-        /*
-        LuceneBenchmark.lucene.search("the");  
-        LuceneBenchmark.lucene.search("who");  
-        LuceneBenchmark.lucene.search("the who");  
-        LuceneBenchmark.lucene.search("\"the who\"");  
-        if (true) return;
-        */
-        
-   
-        // Search
-        LoadQueries("C:/data/09.mq.topics.20001-60000.txt");
-
-        //warmup
-        LuceneBenchmark.lucene.search("test");  
-
-        for (int concurrentUsers=1;concurrentUsers<=4;concurrentUsers++) //1..10
+        if (loadTestEnabled) 
         {
-            int maxSearchThreads=concurrentUsers;
-            ExecutorService searchExecutor = Executors.newFixedThreadPool(maxSearchThreads);
-            searchSemaphore = new Semaphore(maxSearchThreads*4);
+     
+            // Search
+            LoadQueries("C:/data/09.mq.topics.20001-60000.txt");
 
-            int queryCount=0;
-            resultCountSum.set(0);
-            sampleSearchTime = new Sampling(10000);
-            start=System.currentTimeMillis();
+            //warmup
+            LuceneBenchmark.lucene.search("test", false);  
 
-            for (String s : queries) 
+            //multiple runs with different number of concurrent users
+            for (int concurrentUsers=1;concurrentUsers<=4;concurrentUsers++) //1..4    
             {
-                try{
-                    searchSemaphore.acquire();
-                }catch(Exception e){}
-                searchExecutor.submit(new SearchThread(s));              
-                queryCount++;
-                if (queryCount>=querySize) break;
+                int maxSearchThreads=concurrentUsers;
+                ExecutorService searchExecutor = Executors.newFixedThreadPool(maxSearchThreads);
+                searchSemaphore = new Semaphore(maxSearchThreads);
+
+                int queryCount=0;
+                resultCountSum.set(0);
+                sampleSearchTime = new Sampling(10000);
+                start=System.currentTimeMillis();
+
+                for (String s : queries) 
+                {
+                    try{
+                        searchSemaphore.acquire();
+                    }catch(Exception e){}
+                    searchExecutor.execute(new SearchThread(s));              
+                    queryCount++;
+
+                    if (queryCount>=querySize) break;
+                }
+
+                searchExecutor.shutdown();
+                try {
+                    searchExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+                } catch (InterruptedException e) {  }
+
+
+                millis=System.currentTimeMillis()-start;
+
+                //results, time, qps
+                System.out.println("QueryCount: " + queryCount+"  userNumber: "+concurrentUsers+"  Throughput: " + String.format("%,.2f",((double)queryCount * (double)1000 / (double)millis)) + " query/sec (QPS)"+"  resultCount: " + String.format("%,d",resultCountSum.get())+"  latency: "+String.format("%,d",sampleSearchTime.sum/queryCount));
+                sampleSearchTime.Calc();
+                System.out.println("");
+                System.out.println("Search Latency");
+                System.out.println("mean: " + String.format("%,d",sampleSearchTime.sum/ queryCount) + "ms");
+                System.out.println("median: " + String.format("%,d",sampleSearchTime.median) + "ms");
+                System.out.println("75th percentile: " + String.format("%,d",sampleSearchTime.percentile75));
+                System.out.println("90th percentile: " + String.format("%,d",sampleSearchTime.percentile90));
+                System.out.println("95th percentile: " + String.format("%,d",sampleSearchTime.percentile95));
+                System.out.println("98th percentile: " + String.format("%,d",sampleSearchTime.percentile98));
+                System.out.println("99th percentile: " + String.format("%,d",sampleSearchTime.percentile99));
+                System.out.println("99.9th percentile: " + String.format("%,d",sampleSearchTime.percentile999));
+                System.out.println("max: " + String.format("%,d",sampleSearchTime.maximum) + "ms");
+                System.out.println("");
             }
 
-            searchExecutor.shutdown();
-            try {
-                searchExecutor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-            } catch (InterruptedException e) {  }
-
-
-            millis=System.currentTimeMillis()-start;
-
-            //results, time, qps
-            System.out.println("QueryCount: " + queryCount+"  userNumber: "+concurrentUsers+"  Throughput: " + String.format("%,.2f",((double)queryCount * (double)1000 / (double)millis)) + " query/sec (QPS)"+"  resultCount: " + String.format("%,d",resultCountSum.get())+"  latency: "+String.format("%,d",sampleSearchTime.sum/queryCount));
-            sampleSearchTime.Calc();
-            System.out.println("");
-            System.out.println("Search Latency");
-            System.out.println("mean: " + String.format("%,d",sampleSearchTime.sum/ queryCount) + "ms");
-            System.out.println("median: " + String.format("%,d",sampleSearchTime.median) + "ms");
-            System.out.println("75th percentile: " + String.format("%,d",sampleSearchTime.percentile75));
-            System.out.println("90th percentile: " + String.format("%,d",sampleSearchTime.percentile90));
-            System.out.println("95th percentile: " + String.format("%,d",sampleSearchTime.percentile95));
-            System.out.println("98th percentile: " + String.format("%,d",sampleSearchTime.percentile98));
-            System.out.println("99th percentile: " + String.format("%,d",sampleSearchTime.percentile99));
-            System.out.println("99.9th percentile: " + String.format("%,d",sampleSearchTime.percentile999));
-            System.out.println("max: " + String.format("%,d",sampleSearchTime.maximum) + "ms");
-            System.out.println("");
         }
     }
 

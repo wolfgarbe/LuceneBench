@@ -5,12 +5,13 @@
       <attribute name="module" value="true"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="lib" path="C:/lucene/lucene-7.5.0/core/lucene-core-7.5.0.jar"/>
-  <classpathentry kind="lib" path="C:/lucene/lucene-7.5.0/queryparser/lucene-queryparser-7.5.0.jar"/>
-  <classpathentry kind="lib" path="C:/lucene/lucene-7.5.0/analysis/common/lucene-analyzers-common-7.5.0.jar"/>
-  <classpathentry kind="lib" path="C:/lucene/lucene-7.5.0/demo/lucene-demo-7.5.0.jar"/>
-  <classpathentry kind="lib" path="C:/lucene/lucene-7.5.0/highlighter/lucene-highlighter-7.5.0.jar"/>
-  <classpathentry kind="lib" path="C:/lucene/lucene-7.5.0/memory/lucene-memory-7.5.0.jar"/>
+  <classpathentry kind="lib" path="C:/lucene/lucene-8.4.1/core/lucene-core-8.4.1.jar"/>
+  <classpathentry kind="lib" path="C:/lucene/lucene-8.4.1/queryparser/lucene-queryparser-8.4.1.jar"/>
+  <classpathentry kind="lib" path="C:/lucene/lucene-8.4.1/analysis/common/lucene-analyzers-common-8.4.1.jar"/>
+  <classpathentry kind="lib" path="C:/lucene/lucene-8.4.1/demo/lucene-demo-8.4.1.jar"/>
+  <classpathentry kind="lib" path="C:/lucene/lucene-8.4.1/highlighter/lucene-highlighter-8.4.1.jar"/>
+  <classpathentry kind="lib" path="C:/lucene/lucene-8.4.1/memory/lucene-memory-8.4.1.jar"/>
+  <classpathentry kind="lib" path="C:/lucene/lucene-8.4.1/backward-codecs/lucene-backward-codecs-8.4.1.jar"/>
   <classpathentry kind="src" path="src"/>
   <classpathentry kind="output" path="bin"/>
 </classpath>

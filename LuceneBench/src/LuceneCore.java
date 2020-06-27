@@ -1,5 +1,4 @@
 
-//import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -8,6 +7,7 @@ import org.apache.lucene.queryparser.classic.MultiFieldQueryParser;
 import org.apache.lucene.search.*;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+//import org.apache.lucene.store.MMapDirectory;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.DirectoryReader;
@@ -15,7 +15,6 @@ import org.apache.lucene.document.TextField;
 import org.apache.lucene.document.StoredField;
 import org.apache.lucene.search.highlight.Highlighter;
 import org.apache.lucene.search.highlight.QueryScorer;
-//import org.apache.lucene.analysis.TokenStream;
 
 import java.nio.file.Paths;
 
@@ -26,7 +25,6 @@ public class LuceneCore
 
 	// Specify the analyzer for tokenizing text.
 	// The same analyzer should be used for indexing and searching
-	//StandardAnalyzer analyzer;
 	SimpleAnalyzer analyzer;
 
 	// Writing object, linked to the repository
@@ -42,23 +40,7 @@ public class LuceneCore
 
 	LuceneCore() {
 		// Instantiate the analyzer
-		//analyzer = new StandardAnalyzer();
 		analyzer = new SimpleAnalyzer();
-
-		// Define document and fields
-		/*
-		doc = new Document();
-		titleField= new TextField("title", "", Field.Store.YES);
-		contentField= new TextField("content", "", Field.Store.YES);
-		domainField= new TextField("domain", "", Field.Store.YES);
-		urlField=new TextField("url", "", Field.Store.YES);
-		dateField=new StoredField("date", 0L);
-		doc.add(titleField);
-		doc.add(contentField);
-		doc.add(domainField);
-		doc.add(urlField);
-		doc.add(dateField);
-		*/
 	}
 
 	/* Open or create the index */
@@ -68,6 +50,7 @@ public class LuceneCore
 			//https://lucene.apache.org/core/7_5_0/core/org/apache/lucene/store/FSDirectory.html
 			//NIOFSDirectory for Java, but not Windows
 			index = FSDirectory.open(Paths.get(directory));
+			//index = MMapDirectory.open(Paths.get(directory));
 
 			IndexWriterConfig conf = new IndexWriterConfig(analyzer);
 			//Java command-line:  -Xmx8g -Xms8g -server (start menu: configure java)
@@ -79,27 +62,26 @@ public class LuceneCore
 		}
 	}
 
-	public Long search(String querystr) 
+	public Long search(String querystr, boolean display) 
 	{
 		Long totalHits=0L;
 		try {
 			// Instantiate a query parser
-			//QueryParser parser = new QueryParser( "content", analyzer);
 			MultiFieldQueryParser parser = new MultiFieldQueryParser(new String[]{"title", "content","domain","url"},analyzer);
-			parser.setDefaultOperator(parser.AND_OPERATOR);
+			parser.setDefaultOperator( MultiFieldQueryParser.AND_OPERATOR );//parser.AND_OPERATOR
 
 			// Parse
 			Query q = parser.parse(querystr);
 
-			// We look for top-10 results
-			int hitsPerPage = 10;
 			// Instantiate a searcher
-			//IndexSearcher searcher = new IndexSearcher(index, true);
 			IndexReader indexReader = DirectoryReader.open(index);
 			IndexSearcher searcher = new IndexSearcher(indexReader);
 
+			// We look for top-10 results
+			int hitsPerPage = 10;
+			int totalHitsTreshold=Integer.MAX_VALUE;
 			// Ranker
-			TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage);
+			TopScoreDocCollector collector = TopScoreDocCollector.create(hitsPerPage, totalHitsTreshold);
 			// Search
 			searcher.search(q, collector);
 			// Retrieve the top-10 documents
@@ -107,31 +89,33 @@ public class LuceneCore
 			//TopDocs topDocs = searcher.search(q, hitsPerPage);
 
 			ScoreDoc[] hits = topDocs.scoreDocs;
-			//totalHits=topDocs.totalHits;
-			totalHits=(long)hits.length;
-
-			//testonly
-			//System.out.println("query: "+querystr + " " + hits.length+" "+String.format("%,d",topDocs.totalHits));
+			totalHits=topDocs.totalHits.value;
 
 			Highlighter highlighter = new Highlighter(new QueryScorer(q));		
 
 			// Display results
-			//System.out.println(querystr+" "  + hits.length + " hits.");
-			for (int i = 0; i < hits.length; ++i) {
-				int docId = hits[i].doc;
-				Document d = searcher.doc(docId);
-				String title=d.get("title");
-				String content=d.get("content");
-				String domain=d.get("domain");
-				String url=d.get("url");
-				String date=d.get("date");
-				String kwic ="";	
-									
-				//highlighter.setTextFragmenter(new SimpleFragmenter(80));
-				//TokenStream tokenStream = analyzer.tokenStream("content", content);
-				//kwic = highlighter.getBestFragments(tokenStream, content, 2,"...");
-				kwic = highlighter.getBestFragment(analyzer, "content", content);
-				//System.out.println((i + 1) + ". " + title+" :: "+kwic);
+			if (display)
+			{
+				System.out.println("query: "+querystr + " hits: " + hits.length+" totalHits: "+String.format("%,d",totalHits));
+				for (int i = 0; i < hits.length; ++i) {
+					int docId = hits[i].doc;
+					Document d = searcher.doc(docId);
+					String title=d.get("title");
+					String content=d.get("content");
+					String domain=d.get("domain");
+					String url=d.get("url");
+					String date=d.get("date");
+					String kwic ="";	
+										
+					kwic = highlighter.getBestFragment(analyzer, "content", content);
+					
+					System.out.println((i + 1) + ". " + title);
+					System.out.println(kwic);
+					System.out.println(url);
+					System.out.println(domain);
+					System.out.println(date);
+					System.out.println();				
+				}
 			}
 
 			// Close the searcher
@@ -142,7 +126,7 @@ public class LuceneCore
 		return totalHits;
 	}
 
-	public void addDoc(DocObject  document /*String title, String content*/) {
+	public void addDoc(DocObject  document) {
 		try {
 			// Instantiate a new document
 			Document doc = new Document();
@@ -153,17 +137,12 @@ public class LuceneCore
 			doc.add(new TextField("domain", document.domain, Field.Store.YES));
 			doc.add(new TextField("url", document.url, Field.Store.YES));
 			doc.add(new StoredField("date", document.date));
-	
-			/*
-			titleField.setStringValue(document.title);
-			contentField.setStringValue(document.content);
-			domainField.setStringValue(document.domain);
-			urlField.setStringValue(document.url);
-			dateField.setLongValue(document.date);
-			*/
 			
 			// And add the document to the index
 			writer.addDocument(doc);
+			//for Near Real Time Search
+			//writer.flush();
+			//writer.commit();
 		} catch (Exception e) {
 			System.out.println("Got an Exception: " + e.getMessage());
 		}
@@ -172,7 +151,6 @@ public class LuceneCore
 	// Close the index
 	public void closeIndex() {
 		try {
-			//writer.optimize();
 			writer.close();
 		} catch (Exception e) {
 			System.out.println("Got an Exception: " + e.getMessage());
