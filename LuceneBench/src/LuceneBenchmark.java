@@ -15,10 +15,10 @@ public class LuceneBenchmark
 {
     //true: create new index
     //false: load existing index
-    public static Boolean indexingEnabled=false;
+    public static Boolean indexingEnabled=true;
     //true: load test enabled
     //false: load test disabled
-    public static Boolean loadTestEnabled=true;
+    public static Boolean loadTestEnabled=false;
 
     public static int querySize = 40000;
 
@@ -87,7 +87,7 @@ public class LuceneBenchmark
             //see https://home.apache.org/~mikemccand/lucenebench/indexing.html
             Integer maxThreads=16;//Runtime.getRuntime().availableProcessors(); 
             ExecutorService executor = Executors.newFixedThreadPool(maxThreads);
-            indexSemaphore = new Semaphore(maxThreads*4);
+            indexSemaphore = new Semaphore(maxThreads);
             
             try (Stream<String> lines = Files.lines(path)) 
             {
@@ -110,25 +110,39 @@ public class LuceneBenchmark
                         case 4:
                             doc.content = line;
 
-                            // Add documents
+                            // Add document
                             indexedDocCount++;
                             try{
                                 indexSemaphore.acquire();
                             }catch(Exception e){}
                             executor.submit(new AddDocThread(doc));
+
+                            //display progress every 100.000 documents
+                            if ((indexedDocCount % 100000) == 0)
+                            {
+                                System.out.println(String.format("%,d",indexedDocCount));
+                            }
+        
+                            //commit every 1.000.000 documents
+                            //Commits all pending changes (e.g. added  documents) to the index, and syncs all referenced index files, 
+                            //such that a reader will see the changes and the index updates will survive an OS or machine crash or power loss. 
+                            //https://lucene.apache.org/core/8_4_0//core/org/apache/lucene/index/IndexWriter.html#commit--
+                            if ((indexedDocCount % 1000000) == 0)
+                            {
+                                try {
+                                    lucene.writer.commit();                   
+                                } catch (Exception e) {
+                                    System.out.println("Got an Exception: " + e.getMessage());
+                                }
+                            }
                             break;
                         default:
                             break;
                     }
-
-                    linecount++;
-                    if ((linecount % 500000) == 0)
-                    {
-                        System.out.println(String.format("%,d",linecount / 5)+"  permits: "+indexSemaphore.availablePermits());
-                    }
+                    linecount++; 
                 });
             } catch (IOException ex) {
-                System.out.println("Exception at line "+String.format("%,d",linecount / 5)+"  "+ex.getMessage());
+                System.out.println("Exception at line "+String.format("%,d",indexedDocCount)+"  "+ex.getMessage());
             }
 
             //###### end threading
@@ -143,10 +157,8 @@ public class LuceneBenchmark
 
             millis=System.currentTimeMillis()-start;
 
-            System.out.println("Wikipedia indexing finished:   docs: " + String.format("%,d",indexedDocCount)+" ("+String.format("%,d",linecount / 5) +")" + " docs/day: " + 
-            String.format("%,d",indexedDocCount * 1000 * 3600 * 24 / millis) + " (" + String.format("%,d",linecount / 5 * 1000 * 3600 * 24 / millis) + 
-            ")" + " GB/hour: " + (filesize * 1000 * 3600 / millis / 1024 / 1024 / 1024)+"  minutes: "+ 
-            (millis/(long)60000));
+            System.out.println("Wikipedia indexing finished:   docs: " + String.format("%,d",indexedDocCount) + " docs/day: " + 
+            String.format("%,d",indexedDocCount * 1000 * 3600 * 24 / millis) + " GB/hour: " + (filesize * 1000 * 3600 / millis / 1024 / 1024 / 1024)+"  minutes: "+  (millis/(long)60000));
         }
 
         if (loadTestEnabled) 
