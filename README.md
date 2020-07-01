@@ -61,17 +61,17 @@ Test data and search index are stored on different disks in order to utilize the
 
 |                           | [Lucene](http://lucene.apache.org/core/) v8.4.1   | [SeekStorm](https://seekstorm.com/) v0.2   | Factor |
 | :--- | ---: | ---: | ---: |    
-| **Search Latency** (ms, 4 concurrent users)   | 63  |  3 |  **21.0** | 
-| &nbsp;&nbsp;&nbsp;mean |  63 | 3  |  |
-| &nbsp;&nbsp;&nbsp;median |  61 | 3  |  |
-| &nbsp;&nbsp;&nbsp;90th percentile | 81  | 8  |  |
-| &nbsp;&nbsp;&nbsp;99th percentile | 110  | 17  |  |
-| **Maximum Throughput** (QPS)   | 63  | 1474  | **23** | 
-| **Maximum Concurrent Users** (latency<1s) | 4  | 1100  | **275** |
-| **Indexing Speed** (million docs/day) | 900 | 585  | **0.65** |
-| **Indexing Speed** (GB/hour)  | 116  | 76  |  **0.65** |
+| **Search Latency** (ms, 4 concurrent users)   | 72  |  3 |  **24** | 
+| &nbsp;&nbsp;&nbsp;mean |  72 | 3  |  |
+| &nbsp;&nbsp;&nbsp;median |  68 | 3  |  |
+| &nbsp;&nbsp;&nbsp;90th percentile | 94  | 9  |  |
+| &nbsp;&nbsp;&nbsp;99th percentile | 147  | 20  |  |
+| **Maximum Throughput** (QPS)   | 71  | 1424  | **20** | 
+| **Maximum Concurrent Users** (latency<1s) | 6  | 1400  | **233** |
+| **Indexing Speed** (million docs/day) | 562 | 536  | **0.95** |
+| **Indexing Speed** (GB/hour)  | 72  | 70  |  **0.95** |
 | **Index Size** (GB)           | 17  | 16  | **0.94** |
-| **Write Amplification**       | 6.19 | 1.28 | **4.84** |
+| **Write Amplification**       | 6.19 | 1.23 | **5.03** |
 
 ### Benchmark conditions
 Title, content, domain, url, date fields are stored and retrieved.<br>
@@ -79,7 +79,7 @@ Full text search in all fields.<br>
 KWIC summary generated from content field.<br>
 Lucene SimpleAnalyzer (No stopwords, no stemming).<br>
 Lucene DefaultOperator: AND<br>
-Multithreaded queries: 4 Threads (>4 Lucene crash)<br>
+Multithreaded queries: 6 Threads (>6 Lucene crash)<br>
 Multithreaded indexing: 16 Threads (as [recommended](https://home.apache.org/~mikemccand/lucenebench/indexing.html))<br>
 Lucene RAM buffer size: 2048 MB (as [recommended](https://home.apache.org/~mikemccand/lucenebench/indexing.html))<br>
 JRE parameters: -Xmx8g -Xms8g -server (as [recommended](https://home.apache.org/~mikemccand/lucenebench/indexing.html))
@@ -90,6 +90,6 @@ Intel Core i7-8750H<br>
 Samsung 970 EVO SSD, 1TB<br>
 
 ### Software
-Lucene 8.4.1<br>
-Java SE 13.0.2<br>
+Lucene 8.4.1, Java SE 13.0.2<br>
+SeekStorm 1.2.0, .NET 5.0<br>
 Microsoft Windows 10 Professional<br>
