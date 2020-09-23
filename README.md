@@ -94,3 +94,7 @@ Samsung 970 EVO SSD, 1TB<br>
 Lucene 8.4.1, Java SE 13.0.2<br>
 SeekStorm 1.2.0, .NET 5.0<br>
 Microsoft Windows 10 Professional<br>
+
+---
+
+**LuceneBench** is contributed by [**SeekStorm** - the high performance Search as a Service & search API](https://seekstorm.com)
