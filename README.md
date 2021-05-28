@@ -71,7 +71,7 @@ Test data and search index are stored on different disks in order to utilize the
 | **Indexing Speed** (million docs/day) | 562 | 644  | **1.15** |
 | **Indexing Speed** (GB/hour)  | 72  | 84  |  **1.15** |
 | **Index Size** (GB)           | 17  | 16  | **0.94** |
-| **Write Amplification**       | 6.19 | 1.23 | **5.03** |
+| **Write Amplification**       | 6.19 | 1.23 | **0.20** |
 | **Real-time lag** (commit distance in docs)      | 1.000.000 | 1 | |
 
 ### Benchmark conditions
