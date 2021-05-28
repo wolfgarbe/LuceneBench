@@ -63,13 +63,13 @@ Test data and search index are stored on different disks in order to utilize the
 | :--- | ---: | ---: | ---: |    
 | **Search Latency** (ms, 4 concurrent users)   | 72  |  3 |  **24** | 
 | &nbsp;&nbsp;&nbsp;mean |  72 | 3  |  |
-| &nbsp;&nbsp;&nbsp;median |  68 | 3  |  |
-| &nbsp;&nbsp;&nbsp;90th percentile | 94  | 9  |  |
+| &nbsp;&nbsp;&nbsp;median |  68 | 2  |  |
+| &nbsp;&nbsp;&nbsp;90th percentile | 94  | 7  |  |
 | &nbsp;&nbsp;&nbsp;99th percentile | 147  | 20  |  |
 | **Maximum Throughput** (QPS)   | 71  | 1424  | **20** | 
 | **Maximum Concurrent Users** (latency<1s) | 6  | 1400  | **233** |
-| **Indexing Speed** (million docs/day) | 562 | 536  | **0.95** |
-| **Indexing Speed** (GB/hour)  | 72  | 70  |  **0.95** |
+| **Indexing Speed** (million docs/day) | 562 | 644  | **1.15** |
+| **Indexing Speed** (GB/hour)  | 72  | 84  |  **1.15** |
 | **Index Size** (GB)           | 17  | 16  | **0.94** |
 | **Write Amplification**       | 6.19 | 1.23 | **5.03** |
 | **Real-time lag** (commit distance in docs)      | 1.000.000 | 1 | |
@@ -92,7 +92,7 @@ Samsung 970 EVO SSD, 1TB<br>
 
 ### Software
 Lucene 8.4.1, Java SE 13.0.2<br>
-SeekStorm 1.2.0, .NET 5.0<br>
+SeekStorm 1.3.0, .NET 6.0<br>
 Microsoft Windows 10 Professional<br>
 
 ---
